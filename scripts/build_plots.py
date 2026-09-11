@@ -115,7 +115,10 @@ def main(argv: list[str]) -> int:
             index.setdefault(key, []).append(work)
     print(f"{len(works)} works, {len(index)} distinct titles to match")
 
-    found: dict[str, tuple[str, str, str, str]] = {}
+    # (summary, heading it came from, licence, wiki url). The heading is
+    # Optional because summarise() falls back to the lead paragraph, which has
+    # no heading of its own.
+    found: dict[str, tuple[str, str | None, str, str]] = {}
     for name, archive, licence, base_url in WIKIS:
         if not archive.exists():
             print(f"  ~ {archive.name} absent; skipping {name}", file=sys.stderr)
@@ -156,9 +159,13 @@ def main(argv: list[str]) -> int:
     licences: dict[str, int] = {}
     with OUT.open("w") as out:
         for work in works:
-            summary, source, licence, url = found.get(
-                work["id"], (None, None, None, None)
-            )
+            summary: str | None = None
+            source: str | None = None
+            licence: str | None = None
+            url: str | None = None
+            entry = found.get(work["id"])
+            if entry is not None:
+                summary, source, licence, url = entry
             if licence:
                 licences[licence] = licences.get(licence, 0) + 1
             out.write(
