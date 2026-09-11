@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Stream pages out of a MediaWiki XML dump without ever unpacking it.
 
-The Memory Alpha and Memory Beta dumps are 78 MB and 40 MB of 7z that expand to
-roughly a gigabyte of XML between them. There is no reason for those GB to exist: `7z x -so` writes the archive to stdout,
+The Memory Alpha and Memory Beta dumps are 82 MB and 42 MB of 7z, expanding to
+roughly a gigabyte of XML between them. There is no reason for that gigabyte to
+exist: `7z x -so` writes the archive to stdout,
 iterparse consumes it as it arrives, and each element is cleared once read. Peak
 memory stays flat and the only bytes on disk are the ones already downloaded.
 
