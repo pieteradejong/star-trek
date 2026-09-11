@@ -2,8 +2,8 @@
 
 A complete, provenance-tracked inventory of the Star Trek extended universe —
 every novel, comic, video game, magazine, episode and film — with plot summaries
-drawn from Memory Beta and Memory Alpha. **4,497 works and 863,000 words of
-summary**, covering 98% of the catalogue, built from source in about an hour.
+drawn from Memory Beta and Memory Alpha. **4,497 works and 864,000 words of
+summary**, covering 99% of the catalogue, built from source in about an hour.
 
 The code is here. The corpus is not: it is rebuilt locally by `make data` and
 never committed, because the upstream text is CC BY-SA and, for Memory Alpha,
@@ -65,8 +65,8 @@ carrying the licence of the wiki it came from.
 
 Field coverage: 67% have a publication year, 65% an author, 65% a page count,
 63% a publisher, 47% a series. 697 distinct authors and 149 directors.
-Plot summaries cover 4,420 of 4,497 works — **2,706 under CC BY-SA** from Memory
-Beta and 1,714 under **CC BY-NC** from Memory Alpha.
+Plot summaries cover 4,436 of 4,497 works — **2,712 under CC BY-SA** from Memory
+Beta and 1,724 under **CC BY-NC** from Memory Alpha.
 
 ## Data sources
 
@@ -121,7 +121,7 @@ scripts/check_invariants.py assert the figures this README quotes
   wrong by a factor of three.
 - **Memory Beta is scanned before Memory Alpha, on purpose.** Where both
   describe a work, the CC BY-SA text is preferred and the NonCommercial text is
-  only a fallback — which is why 2,706 summaries are share-alike and only 1,714
+  only a fallback — which is why 2,712 summaries are share-alike and only 1,724
   are NonCommercial, rather than the other way round.
 - **`staff` is not a list of authors.** It was in the author field list at
   first, and swept entire production crews in: the corpus claimed ~1,000

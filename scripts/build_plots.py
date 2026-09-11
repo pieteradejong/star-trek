@@ -133,7 +133,14 @@ def main(argv: list[str]) -> int:
                     end="",
                     flush=True,
                 )
-            for key in {normalise(page.title), normalise(PAREN.sub("", page.title))}:
+            # An ordered, de-duplicated list, not a set: set iteration order
+            # varies between runs, and with it which page claims a work whose
+            # exact and parenthetical-stripped titles both match something.
+            # That made the summary count drift by a few between builds.
+            exact = normalise(page.title)
+            stripped = normalise(PAREN.sub("", page.title))
+            keys = [exact] if exact == stripped else [exact, stripped]
+            for key in keys:
                 if not key or key not in index:
                     continue
                 # First wiki to supply a summary wins. Memory Beta is scanned
@@ -159,26 +166,23 @@ def main(argv: list[str]) -> int:
     licences: dict[str, int] = {}
     with OUT.open("w") as out:
         for work in works:
-            summary: str | None = None
-            source: str | None = None
-            licence: str | None = None
-            url: str | None = None
+            # Distinct names: `summary`, `source` and `licence` are already
+            # bound by the scanning loops above, in the same function.
             entry = found.get(work["id"])
-            if entry is not None:
-                summary, source, licence, url = entry
-            if licence:
-                licences[licence] = licences.get(licence, 0) + 1
+            text, heading, terms, wiki_url = entry if entry else (None,) * 4
+            if terms:
+                licences[terms] = licences.get(terms, 0) + 1
             out.write(
                 json.dumps(
                     {
                         "id": work["id"],
                         "title": work["title"],
                         "kind": work["kind"],
-                        "summary": summary,
-                        "summary_source": source,
-                        "words": len(summary.split()) if summary else 0,
-                        "source_url": url or work["source_url"],
-                        "summary_licence": licence,
+                        "summary": text,
+                        "summary_source": heading,
+                        "words": len(text.split()) if text else 0,
+                        "source_url": wiki_url or work["source_url"],
+                        "summary_licence": terms,
                     },
                     sort_keys=True,
                 )
