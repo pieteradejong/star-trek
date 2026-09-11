@@ -1,0 +1,77 @@
+# The source register: what this project reads, under what terms, and why.
+# Hand-authored and committed -- unlike data/raw/ and data/derived/, which are
+# fetched, generated, and gitignored. Covered by LICENSE-DATA (CC BY 4.0).
+#
+# scripts/fetch_sources.py is the code that acts on this; the two are kept in
+# agreement by tests/test_manifest.py, which asserts every fetched row carries
+# a licence, and that Memory Alpha's is recorded as NonCommercial.
+
+- id: stapi
+  title: STAPI, the Star Trek API
+  url: https://stapi.co/api/v1/rest
+  licence: free API, no explicit grant
+  rights: data about copyrighted works
+  role: spine
+  gives: the complete typed catalogue of the franchise
+  counts:
+    book: 1494
+    bookSeries: 91
+    comics: 985
+    comicSeries: 134
+    videoGame: 74
+    magazine: 555
+    episode: 860
+    movie: 14
+    series: 12
+  note: >
+    Verified 2026-09-11. The /search endpoints return summaries only -- no
+    authors, publishers or series -- so a second hydrating pass fetches the
+    full record for each of ~3,100 uids in the entities where authorship
+    matters. That pass is serial, spaced, and resumable.
+
+- id: memory-beta
+  title: Memory Beta, the non-canon Star Trek wiki
+  url: https://s3.amazonaws.com/wikia_xml_dumps/s/st/startrek_pages_current.xml.7z
+  site: https://memory-beta.fandom.com/
+  licence: CC-BY-SA-3.0
+  rights: share-alike
+  role: plot summaries, extended universe
+  dump_date: 2026-01-13
+  articles: 76856
+  bytes: 40000000
+  note: >
+    Db name is "startrek", NOT "memorybeta" -- confirmed via
+    api.php?action=query&meta=siteinfo, which is why it is recorded here rather
+    than constructed. Scanned BEFORE Memory Alpha so that the share-alike text
+    is preferred wherever both wikis cover a work.
+
+- id: memory-alpha
+  title: Memory Alpha, the canon Star Trek wiki
+  url: https://s3.amazonaws.com/wikia_xml_dumps/e/en/enmemoryalpha_pages_current.xml.7z
+  site: https://memory-alpha.fandom.com/
+  licence: CC-BY-NC-3.0
+  rights: NONCOMMERCIAL -- not share-alike, not redistributable from this repo
+  role: plot summaries, screen canon
+  dump_date: 2026-09-07
+  articles: 66468
+  bytes: 78000000
+  note: >
+    The one licensing trap in this project. Most Fandom wikis are CC BY-SA;
+    Memory Alpha is not, confirmed via the siteinfo rightsinfo endpoint. Every
+    summary derived from it is tagged summary_licence CC-BY-NC-3.0, lives only
+    in the gitignored data/derived/, and is used only where Memory Beta has no
+    coverage.
+
+- id: chakoteya
+  title: chakoteya.net episode transcripts
+  url: https://www.chakoteya.net/
+  licence: NONE -- Paramount copyright, hosted without a grant
+  rights: local use only, never redistributed
+  role: dialogue
+  status: unreachable since 2026-09-11
+  gives: would give verbatim transcripts of every TOS/TNG/DS9/VOY/ENT episode
+  note: >
+    Host does not respond over http or https. scripts/fetch_dialogue.py is
+    written against it and left enabled so the failure is reported rather than
+    hidden. Recorded here because a dead source that nobody wrote down is
+    indistinguishable from a source nobody looked for.
